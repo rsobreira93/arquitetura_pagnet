@@ -1,0 +1,41 @@
+services:
+  # Spring Boot Application
+  spring-app:
+    image: backend-pagnet:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/pagnet
+    depends_on:
+      - postgres-db
+
+  # MySQL Database
+  # mysql-db:
+  #   image: mysql:8.0
+  #   ports:
+  #     - "3307:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: 123456
+  #     MYSQL_DATABASE: pagnet
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: 123456
+
+  # Postgres Database
+  postgres-db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: pagnet
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+
+  # SPA Application
+  spa-app:
+    build:
+      #context: ./frontend # Path to your SPA project directory
+      dockerfile: Dockerfile # Specify the Dockerfile to use
+    ports:
+      - "9090:9090" # Map host port to container port
+    depends_on:
+      - spring-app
